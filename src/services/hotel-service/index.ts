@@ -21,8 +21,22 @@ async function reciveHotelRepository(userId: number) {
   return hotel;
 }
 
+async function reciveHotelIds(userId: number, hotelId: number) {
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  if(!enrollment) {
+    throw notFoundError();
+  }
+  const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
+  if(!ticket || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel|| ticket.status === "RESERVED") {
+    throw conflictError("It's already reserved");
+  }
+  
+  const hotel = await hotelRepository.findRByHotelId(hotelId);
+  return hotel;
+}
+
 const hotelService = {
-  reciveHotelRepository
+  reciveHotelRepository, reciveHotelIds
 };
 
 export default hotelService;
