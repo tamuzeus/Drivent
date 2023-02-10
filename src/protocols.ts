@@ -35,7 +35,10 @@ export type RequestError = {
 };
 
 export type BookingCreation = Omit <Booking, "id" | "createdAt" | "updatedAt" >
+
 export type BookingFactoryCreate = {
   roomId: number,
   userId: number
 }
+
+export type BookingUpsert = Omit <Booking, "userId"| "createdAt" | "updatedAt" >

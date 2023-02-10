@@ -1,6 +1,5 @@
 import { prisma } from "@/config";
-import { PrismaClientValidationError } from "@prisma/client/runtime";
-import { BookingCreation } from "protocols";
+import { BookingCreation, BookingUpsert } from "protocols";
 
 async function findWithUserId(userId: number) {
   return prisma.booking.findFirst({
@@ -36,8 +35,20 @@ async function createBooking({ roomId, userId }: BookingCreation) {
   });
 }
 
+async function uptadedBooking({ roomId, id }: BookingUpsert) {
+  return prisma.booking.update({
+    where: {
+      id
+    },
+    data: {
+      roomId
+    }
+  });
+}
+
 const bookingRepository = {
-  findWithUserId, findRoomById, findRoom, createBooking
+  findWithUserId, findRoomById, findRoom, createBooking, uptadedBooking
 };
 
 export default bookingRepository;
+
